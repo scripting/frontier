@@ -1,0 +1,26 @@
+
+/*	$Id: carbonheaders.pch 355 2005-01-11 22:48:55Z andreradke $    */
+
+/*
+ *	carbonheaders.pch
+ *
+ *	code to generate carbon precompile for Carbon Frontier
+ */
+
+/*
+ *	Support for automatically naming the precompiled header file ...
+ */
+#if __POWERPC__
+#pragma precompile_target "carbonheadersPPC"
+#else
+"Error, no 68k for Carbon"
+#endif
+
+/*
+ *	Now just include the "shellheaders.c" source file ...
+ */
+
+#pragma once on
+
+#include "carbonheaders.c"
+
