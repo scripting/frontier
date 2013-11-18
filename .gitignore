@@ -1,2 +1,3 @@
 build_Xcode/build
-
+build_Xcode/Frontier Universal Binary.xcodeproj/*.pbxuser
+build_Xcode/Frontier Universal Binary.xcodeproj/*.mode1v3
