@@ -1,3 +1,8 @@
 build_Xcode/build
+build_Xcode/tools/*.a
 build_Xcode/Frontier Universal Binary.xcodeproj/*.pbxuser
 build_Xcode/Frontier Universal Binary.xcodeproj/*.mode1v3
+*.o
+build_GNU/tools/*.a
+build_GNU/Frontier.rsrc
+build_GNU/.ranlib

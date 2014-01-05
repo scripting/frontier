@@ -31,7 +31,7 @@ SHELL = /bin/sh
 
 PROJECT = Frontier
 
-CC = gcc
+CC = /usr/bin/gcc-4.0
 
 RANLIB = ranlib
 
@@ -71,7 +71,8 @@ INCLUDE_PATHS = \
 	-I $(SRCDIR)/Common/IowaRuntime/Headers/ \
 	-I $(SRCDIR)/Common/UserLandIACToolkit/ \
 	-I $(SRCDIR)/Common/Paige/headers/ \
-	-I $(SRCDIR)/Common/source/
+	-I $(SRCDIR)/Common/source/ \
+	-I $(SRCDIR)/Common/FSCopyObject/Sources/
 
 #MAC_INCLUDE_PATHS = \
 #	-I /Developer/Headers/FlatCarbon
@@ -132,13 +133,13 @@ PREFIX_FILE = -include frontier.gnu.h
 
 MAC_CFLAGS = \
 	-DMACVERSION=1 \
-	-x c -arch ppc -pipe -std=c99 -Wno-trigraphs -fasm-blocks -fpascal-strings \
-	-fshort-enums -fwritable-strings -mtune=G4 -Wmissing-prototypes -Wunknown-pragmas \
-	-Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wno-long-double -fmessage-length=0 \
+	-x c -arch i386 -pipe -std=c99 -Wno-trigraphs -fasm-blocks -fpascal-strings \
+	-fshort-enums -fwritable-strings -Wmissing-prototypes -Wunknown-pragmas \
+	-Wmost -Wno-four-char-constants -Wno-unknown-pragmas -fmessage-length=0 \
 	-fno-inline -malign-mac68k $(PREFIX_FILE) $(INCLUDE_PATHS)
 
 MAC_LDFLAGS = \
-	-arch ppc -prebind -Wl,-no_arch_warnings -multiply_defined warning
+	-arch i386 -prebind -Wl,-no_arch_warnings -multiply_defined warning
 
 MAC_REZ_OPTIONS = \
 	-d SystemSevenOrLater=1 -d oldTemp \
@@ -168,10 +169,10 @@ DEBUGFLAGS += -DDMALLOC
 endif
 
 MAC_PAIGE_LIB_AR = \
-	$(SRCDIR)/Common/Paige/libpaigemacho.a
+	./tools/libpaigemacho.a
 
 MAC_PAIGE_LIB = \
-	-L$(SRCDIR)/Common/Paige/ -lpaigemacho
+	-L./tools/ -lpaigemacho
 
 WIN_PAIGE_LIB = \
 	-L$(SRCDIR)/Common/Paige/ -lPaigeWin.lib
@@ -409,7 +410,9 @@ INCLUDE_FILES = \
 	$(SRCDIR)/Common/headers/frontierdefs.h \
 	$(SRCDIR)/Common/headers/langmath.h \
 	$(SRCDIR)/Common/headers/FastTimes.h \
-	$(SRCDIR)/Common/headers/byteorder.h
+	$(SRCDIR)/Common/headers/byteorder.h \
+	$(SRCDIR)/Common/FSCopyObject/Sources/FSCopyObject.h \
+	$(SRCDIR)/Common/FSCopyObject/Sources/GenLinkedList.h
 
 #================================================================================================
 # Sources and Objects Definitions
@@ -427,13 +430,13 @@ MAC_APPLET_OBJS = \
 	$(OBJDIR)/Common/source/appletglue.o \
 	$(OBJDIR)/FrontierSDK/Toolkits/AppletToolkit/Source/applettextedit.o
 
-MAC_FILE_SRC = \
-	$(SRCDIR)/Common/source/filealias.c \
-	$(SRCDIR)/Common/source/filelaunch.c
+MAC_FSCOPYOBJECT_SRC = \
+	$(SRCDIR)/Common/FSCopyObject/Sources/FSCopyObject.c \
+	$(SRCDIR)/Common/FSCopyObject/Sources/GenLinkedList.c
 
-MAC_FILE_OBJS = \
-	$(OBJDIR)/Common/source/filealias.o \
-	$(OBJDIR)/Common/source/filelaunch.o
+MAC_FSCOPYOBJECT_OBJ = \
+	$(SRCDIR)/Common/FSCopyObject/Sources/FSCopyObject.o \
+	$(SRCDIR)/Common/FSCopyObject/Sources/GenLinkedList.o
 
 FILE_SRC = \
 	$(SRCDIR)/Common/source/file.c \
@@ -444,7 +447,8 @@ FILE_SRC = \
 	$(SRCDIR)/Common/source/filepath.c \
 	$(SRCDIR)/Common/source/fileverbs.c \
 	$(SRCDIR)/Common/source/findinfile.c \
-	$(SRCDIR)/Common/source/resources.c
+	$(SRCDIR)/Common/source/resources.c \
+	$(OBJDIR)/Common/source/filealias.c
 
 FILE_OBJS = \
 	$(OBJDIR)/Common/source/file.o \
@@ -455,7 +459,8 @@ FILE_OBJS = \
 	$(OBJDIR)/Common/source/filepath.o \
 	$(OBJDIR)/Common/source/fileverbs.o \
 	$(OBJDIR)/Common/source/findinfile.o \
-	$(OBJDIR)/Common/source/resources.o
+	$(OBJDIR)/Common/source/resources.o \
+	$(OBJDIR)/Common/source/filealias.o
 
 MAC_IAC_SRC = \
 	$(SRCDIR)/FrontierSDK/Toolkits/IACTools/Source/iac.c \
@@ -795,7 +800,7 @@ MAC_LANG_SRC = \
 	$(SRCDIR)/Common/source/langipcmenus.c \
 	$(SRCDIR)/Common/source/langmodeless.c \
 	$(SRCDIR)/Common/source/langquicktime.c \
-	$(SRCDIR)/Common/source/OpenTransportNetEvents.c
+	$(SRCDIR)/Common/source/MacSocketNetEvents.c
 
 MAC_LANG_OBJS = \
 	$(OBJDIR)/Common/source/CallMachOFrameWork.o \
@@ -805,7 +810,7 @@ MAC_LANG_OBJS = \
 	$(OBJDIR)/Common/source/langipcmenus.o \
 	$(OBJDIR)/Common/source/langmodeless.o \
 	$(OBJDIR)/Common/source/langquicktime.o \
-	$(OBJDIR)/Common/source/OpenTransportNetEvents.o
+	$(OBJDIR)/Common/source/MacSocketNetEvents.o
 
 WIN_LANG_SRC = \
 	$(SRCDIR)/Common/source/WinSockNetEvents.c
@@ -1113,7 +1118,7 @@ MAC_CLASSIC_OBJECTS = \
 
 MAC_SOURCES = \
 	$(MAC_APPLET_SRC) \
-	$(MAC_FILE_SRC) \
+	$(MAC_FSCOPYOBJECT_SRC) \
 	$(MAC_IAC_SRC) \
 	$(MAC_IOA_SRC) \
 	$(MAC_IOWA_SRC) \
